@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCustomerStore } from '../../lib/stores/customerStore';
 import { useShopStore } from '../../lib/stores/shopStore';
 import ShopSelector from '../../components/ShopSelector';
 import SupabaseDebug from '../../components/debug/SupabaseDebug';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const { customers, loadCustomers } = useCustomerStore();
   const { selectedShop, getShopDisplayName } = useShopStore();
 
@@ -55,13 +57,21 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          Dashboard - {getShopDisplayName()}
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Overzicht van uw {getShopDisplayName()} CRM systeem
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Dashboard - {getShopDisplayName()}
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Overzicht van uw {getShopDisplayName()} CRM systeem
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/register')}
+          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
+        >
+          📝 Klant Registratie
+        </button>
       </div>
 
       {/* Shop Selector */}
