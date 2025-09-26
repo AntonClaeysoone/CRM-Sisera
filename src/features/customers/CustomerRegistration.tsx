@@ -153,7 +153,7 @@ const CustomerRegistration = () => {
 
   return (
     <motion.div 
-      className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4"
+      className="h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4 overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -200,29 +200,29 @@ const CustomerRegistration = () => {
 
         {/* Main Form Card */}
         <motion.div 
-          className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
+          className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           {/* Store Selection */}
           <motion.div 
-            className="mb-8"
+            className="mb-6"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
           >
-            <label className="block text-xl font-semibold text-gray-800 mb-6 text-center">
+            <label className="block text-lg font-semibold text-gray-800 mb-4 text-center">
               Selecteer uw winkel *
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               <motion.button
                 type="button"
                 onClick={() => setSelectedShop('sisera')}
-                className={`p-3 border-2 rounded-lg text-center transition-all duration-300 transform relative overflow-hidden ${
+                className={`p-4 border-2 rounded-lg text-center transition-all duration-300 transform relative overflow-hidden ${
                   selectedShop === 'sisera'
-                    ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-lg'
-                    : 'border-gray-300 bg-white text-gray-700 hover:bg-blue-50 hover:border-blue-300'
+                    ? 'border-blue-500 bg-blue-50 shadow-lg'
+                    : 'border-gray-300 bg-white hover:bg-blue-50 hover:border-blue-300'
                 }`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -230,13 +230,12 @@ const CustomerRegistration = () => {
                   scale: selectedShop === 'sisera' ? 1.01 : 1,
                 }}
               >
-                <div className="flex flex-col items-center">
+                <div className="flex items-center justify-center">
                   <img 
                     src={siseraLogo}
                     alt="Sisera"
-                    className="w-12 h-12 object-contain mb-2"
+                    className="w-20 h-20 object-contain"
                   />
-                  <div className="text-sm font-bold">Sisera</div>
                 </div>
                 {selectedShop === 'sisera' && (
                   <motion.div
@@ -250,10 +249,10 @@ const CustomerRegistration = () => {
               <motion.button
                 type="button"
                 onClick={() => setSelectedShop('boss')}
-                className={`p-3 border-2 rounded-lg text-center transition-all duration-300 transform relative overflow-hidden ${
+                className={`p-4 border-2 rounded-lg text-center transition-all duration-300 transform relative overflow-hidden ${
                   selectedShop === 'boss'
-                    ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-lg'
-                    : 'border-gray-300 bg-white text-gray-700 hover:bg-blue-50 hover:border-blue-300'
+                    ? 'border-blue-500 bg-blue-50 shadow-lg'
+                    : 'border-gray-300 bg-white hover:bg-blue-50 hover:border-blue-300'
                 }`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -261,13 +260,12 @@ const CustomerRegistration = () => {
                   scale: selectedShop === 'boss' ? 1.01 : 1,
                 }}
               >
-                <div className="flex flex-col items-center">
+                <div className="flex items-center justify-center">
                   <img 
                     src={bossLogo}
                     alt="Boss"
-                    className="w-12 h-12 object-contain mb-2"
+                    className="w-20 h-20 object-contain"
                   />
-                  <div className="text-sm font-bold">Boss</div>
                 </div>
                 {selectedShop === 'boss' && (
                   <motion.div
@@ -324,165 +322,165 @@ const CustomerRegistration = () => {
           </AnimatePresence>
 
           {/* Registration Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name Fields */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label className="block text-lg font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Voornaam *
                 </label>
                 <input
                   type="text"
                   required
-                  className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                  className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                     errors.firstName 
                       ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
                       : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
-                  } focus:outline-none focus:ring-4`}
+                  } focus:outline-none focus:ring-2`}
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   placeholder="Uw voornaam"
                 />
                 {errors.firstName && (
-                  <p className="mt-2 text-sm text-red-600">{errors.firstName}</p>
+                  <p className="mt-1 text-xs text-red-600">{errors.firstName}</p>
                 )}
               </div>
               <div>
-                <label className="block text-lg font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Achternaam *
                 </label>
                 <input
                   type="text"
                   required
-                  className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                  className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                     errors.lastName 
                       ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
                       : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
-                  } focus:outline-none focus:ring-4`}
+                  } focus:outline-none focus:ring-2`}
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
                   placeholder="Uw achternaam"
                 />
                 {errors.lastName && (
-                  <p className="mt-2 text-sm text-red-600">{errors.lastName}</p>
+                  <p className="mt-1 text-xs text-red-600">{errors.lastName}</p>
                 )}
               </div>
             </div>
 
             {/* Contact Information */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label className="block text-lg font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   E-mail *
                 </label>
                 <input
                   type="email"
                   required
-                  className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                  className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                     errors.email 
                       ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
                       : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
-                  } focus:outline-none focus:ring-4`}
+                  } focus:outline-none focus:ring-2`}
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="uw.email@voorbeeld.com"
                 />
                 {errors.email && (
-                  <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                  <p className="mt-1 text-xs text-red-600">{errors.email}</p>
                 )}
               </div>
               <div>
-                <label className="block text-lg font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Telefoon *
                 </label>
                 <input
                   type="tel"
                   required
-                  className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                  className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                     errors.phone 
                       ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
                       : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
-                  } focus:outline-none focus:ring-4`}
+                  } focus:outline-none focus:ring-2`}
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="+32 123 456 789"
                 />
                 {errors.phone && (
-                  <p className="mt-2 text-sm text-red-600">{errors.phone}</p>
+                  <p className="mt-1 text-xs text-red-600">{errors.phone}</p>
                 )}
               </div>
             </div>
 
             {/* Address */}
             <div>
-              <label className="block text-lg font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Adres *
               </label>
               <textarea
-                rows={3}
+                rows={2}
                 required
-                className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 resize-none ${
+                className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 resize-none ${
                   errors.address 
                     ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
                     : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
-                } focus:outline-none focus:ring-4`}
+                } focus:outline-none focus:ring-2`}
                 value={formData.address}
                 onChange={(e) => handleInputChange('address', e.target.value)}
                 placeholder="Straat, huisnummer, postcode en plaats"
               />
               {errors.address && (
-                <p className="mt-2 text-sm text-red-600">{errors.address}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.address}</p>
               )}
             </div>
 
             {/* Birth Date */}
             <div>
-              <label className="block text-lg font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Geboortedatum *
               </label>
               <input
                 type="date"
                 required
-                className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                   errors.birthDate 
                     ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
                     : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
-                } focus:outline-none focus:ring-4`}
+                } focus:outline-none focus:ring-2`}
                 value={formData.birthDate}
                 onChange={(e) => handleInputChange('birthDate', e.target.value)}
                 max={new Date().toISOString().split('T')[0]}
               />
               {errors.birthDate && (
-                <p className="mt-2 text-sm text-red-600">{errors.birthDate}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.birthDate}</p>
               )}
             </div>
 
             {/* Marketing Opt-in */}
-            <div className="pt-4">
-              <label className="flex items-start space-x-3 cursor-pointer">
+            <div className="pt-3">
+              <label className="flex items-start space-x-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData.acceptMarketing}
                   onChange={(e) => handleInputChange('acceptMarketing', e.target.checked)}
-                  className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                  className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-1"
                 />
-                <span className="text-sm text-gray-700 leading-relaxed">
+                <span className="text-xs text-gray-700 leading-relaxed">
                   Ja, ik wil op de hoogte gehouden worden van aanbiedingen en nieuws via e-mail
                 </span>
               </label>
             </div>
 
             {/* Terms & Conditions */}
-            <div className="pt-2">
-              <label className="flex items-start space-x-3 cursor-pointer">
+            <div className="pt-1">
+              <label className="flex items-start space-x-2 cursor-pointer">
                 <input
                   type="checkbox"
                   required
                   checked={formData.acceptTerms}
                   onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-                  className={`mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 ${errors.acceptTerms ? 'border-red-500' : ''}`}
+                  className={`mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-1 ${errors.acceptTerms ? 'border-red-500' : ''}`}
                 />
-                <span className={`text-sm leading-relaxed ${errors.acceptTerms ? 'text-red-700' : 'text-gray-700'}`}>
+                <span className={`text-xs leading-relaxed ${errors.acceptTerms ? 'text-red-700' : 'text-gray-700'}`}>
                   Ik ben akkoord met de{' '}
                   <span className="text-blue-600 underline hover:text-blue-700 cursor-pointer">
                     algemene voorwaarden
@@ -494,13 +492,13 @@ const CustomerRegistration = () => {
                 </span>
               </label>
               {errors.acceptTerms && (
-                <p className="mt-1 text-sm text-red-600">{errors.acceptTerms}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.acceptTerms}</p>
               )}
             </div>
 
             {/* Submit Button */}
             <motion.div 
-              className="pt-6"
+              className="pt-4"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.8 }}
@@ -508,7 +506,7 @@ const CustomerRegistration = () => {
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-5 px-8 text-xl font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg shadow-lg transition-all duration-200"
+                className="w-full py-3 px-6 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg shadow-lg transition-all duration-200"
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 animate={isSubmitting ? { scale: 0.98 } : {}}
