@@ -1,39 +1,58 @@
-# Sisera CRM
+# CRM Sisera
 
-Een moderne CRM webapplicatie voor winkel Sisera, gebouwd met React, TypeScript, Vite en TailwindCSS.
+Een moderne CRM webapplicatie voor winkel Sisera en Boss, gebouwd met React, TypeScript, Vite en TailwindCSS.
+
+[![GitHub](https://img.shields.io/badge/github-CRM--Sisera-blue.svg)](https://github.com/AntonClaeysoone/CRM-Sisera)
+[![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg)](https://www.typescriptlang.org/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-06B6D4.svg)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E.svg)](https://supabase.com/)
 
 ## 🚀 Features
 
-- **Authenticatie**: Dummy login systeem met persistente sessie
-- **Dashboard**: Overzicht van klantenstatistieken en recente activiteit
-- **Klantenbeheer**: Volledig CRUD systeem voor klantendatabase
-- **Responsive Design**: Werkt op desktop, tablet en mobiel
-- **State Management**: Zustand voor efficiënte state management
-- **TypeScript**: Volledige type safety
+- **🏪 Shop Management**: Switch tussen Sisera en Boss winkels
+- **👥 Customer Management**: Volledig CRUD systeem met Supabase integratie
+- **📱 Customer Onboarding**: Modal-based klanten toevoegen
+- **📊 Dashboard**: Overzicht van klantenstatistieken per winkel
+- **🔍 Search & Filter**: Geavanceerd zoeken en filteren van klanten
+- **💾 Supabase**: Real-time database integratie
+- **🎨 Modern UI**: TailwindCSS met responsive design
+- **⚡ Performance**: Vite build tool voor snelle development
 
 ## 🛠️ Technologieën
 
 - **Frontend**: React 19 + TypeScript
 - **Build Tool**: Vite
-- **Styling**: TailwindCSS
-- **Routing**: React Router DOM
+- **Styling**: TailwindCSS v3
+- **Database**: Supabase (PostgreSQL)
+- **Routing**: React Router DOM v6
 - **State Management**: Zustand
-- **Icons**: Emoji (voor eenvoud)
+- **Authentication**: Supabase Auth (Ready)
+- **Deployment**: GitHub + Vercel ready
 
 ## 📦 Installatie
 
-1. Clone het project
-2. Installeer dependencies:
+1. **Clone het project**
+   ```bash
+   git clone https://github.com/AntonClaeysoone/CRM-Sisera.git
+   cd CRM-Sisera
+   ```
+
+2. **Installeer dependencies**
    ```bash
    npm install
    ```
 
-3. Start de development server:
+3. **Setup Environment**
+   - Maak `.env` file aan in project root
+   - Voeg je Supabase URL en anon key toe (zie ENVIRONMENT_SETUP.md)
+
+4. **Start development server**
    ```bash
    npm run dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in je browser
+5. **Open [http://localhost:3000](http://localhost:3000)** in je browser
 
 ## 🔐 Demo Inloggegevens
 
