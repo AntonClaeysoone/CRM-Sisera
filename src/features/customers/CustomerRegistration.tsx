@@ -86,7 +86,10 @@ const CustomerRegistration = () => {
             phone: formData.phone,
             address: formData.address,
             birth_date: formData.birthDate,
-            store: formData.store
+            store: formData.store,
+            marketing_opt_in: formData.acceptMarketing,
+            tos_accepted: formData.acceptTerms,
+            marketing_consent_date: formData.acceptMarketing ? new Date().toISOString() : null
           }
         ])
         .select();
@@ -149,11 +152,10 @@ const CustomerRegistration = () => {
     }
   };
 
-  const storeDisplayName = selectedShop === 'sisera' ? 'Sisera' : 'Boss';
 
   return (
     <motion.div 
-      className="h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4 overflow-hidden"
+      className="h-screen bg-gradient-to-br from-white to-gray-50 flex items-center justify-center p-4 overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -183,20 +185,6 @@ const CustomerRegistration = () => {
           </motion.button>
         </motion.div>
 
-        {/* Header */}
-        <motion.div 
-          className="text-center mb-8"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Registreer als klant
-          </h1>
-          <p className="text-lg text-gray-600">
-            Word lid en profiteer van voordelen
-          </p>
-        </motion.div>
 
         {/* Main Form Card */}
         <motion.div 
@@ -221,8 +209,8 @@ const CustomerRegistration = () => {
                 onClick={() => setSelectedShop('sisera')}
                 className={`p-4 border-2 rounded-lg text-center transition-all duration-300 transform relative overflow-hidden ${
                   selectedShop === 'sisera'
-                    ? 'border-blue-500 bg-blue-50 shadow-lg'
-                    : 'border-gray-300 bg-white hover:bg-blue-50 hover:border-blue-300'
+                    ? 'border-black bg-gray-100 shadow-lg'
+                    : 'border-gray-300 bg-white hover:bg-gray-100 hover:border-black'
                 }`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -239,7 +227,7 @@ const CustomerRegistration = () => {
                 </div>
                 {selectedShop === 'sisera' && (
                   <motion.div
-                    className="absolute inset-0 border-2 border-blue-500 rounded-lg"
+                    className="absolute inset-0 border-2 border-black rounded-lg"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
@@ -251,8 +239,8 @@ const CustomerRegistration = () => {
                 onClick={() => setSelectedShop('boss')}
                 className={`p-4 border-2 rounded-lg text-center transition-all duration-300 transform relative overflow-hidden ${
                   selectedShop === 'boss'
-                    ? 'border-blue-500 bg-blue-50 shadow-lg'
-                    : 'border-gray-300 bg-white hover:bg-blue-50 hover:border-blue-300'
+                    ? 'border-black bg-gray-100 shadow-lg'
+                    : 'border-gray-300 bg-white hover:bg-gray-100 hover:border-black'
                 }`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -269,7 +257,7 @@ const CustomerRegistration = () => {
                 </div>
                 {selectedShop === 'boss' && (
                   <motion.div
-                    className="absolute inset-0 border-2 border-blue-500 rounded-lg"
+                    className="absolute inset-0 border-2 border-black rounded-lg"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
@@ -335,7 +323,7 @@ const CustomerRegistration = () => {
                   className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                     errors.firstName 
                       ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                      : 'border-gray-300 focus:border-black focus:ring-gray-200'
                   } focus:outline-none focus:ring-2`}
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
@@ -355,7 +343,7 @@ const CustomerRegistration = () => {
                   className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                     errors.lastName 
                       ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                      : 'border-gray-300 focus:border-black focus:ring-gray-200'
                   } focus:outline-none focus:ring-2`}
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
@@ -379,7 +367,7 @@ const CustomerRegistration = () => {
                   className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                     errors.email 
                       ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                      : 'border-gray-300 focus:border-black focus:ring-gray-200'
                   } focus:outline-none focus:ring-2`}
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
@@ -399,7 +387,7 @@ const CustomerRegistration = () => {
                   className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                     errors.phone 
                       ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
-                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                      : 'border-gray-300 focus:border-black focus:ring-gray-200'
                   } focus:outline-none focus:ring-2`}
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
@@ -422,7 +410,7 @@ const CustomerRegistration = () => {
                 className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 resize-none ${
                   errors.address 
                     ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
-                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                    : 'border-gray-300 focus:border-black focus:ring-gray-200'
                 } focus:outline-none focus:ring-2`}
                 value={formData.address}
                 onChange={(e) => handleInputChange('address', e.target.value)}
@@ -444,7 +432,7 @@ const CustomerRegistration = () => {
                 className={`w-full px-3 py-2 text-sm border-2 rounded-lg transition-colors duration-200 ${
                   errors.birthDate 
                     ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
-                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                    : 'border-gray-300 focus:border-black focus:ring-gray-200'
                 } focus:outline-none focus:ring-2`}
                 value={formData.birthDate}
                 onChange={(e) => handleInputChange('birthDate', e.target.value)}
@@ -462,7 +450,7 @@ const CustomerRegistration = () => {
                   type="checkbox"
                   checked={formData.acceptMarketing}
                   onChange={(e) => handleInputChange('acceptMarketing', e.target.checked)}
-                  className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-1"
+                  className="mt-1 w-4 h-4 text-black border-gray-300 rounded focus:ring-black focus:ring-1"
                 />
                 <span className="text-xs text-gray-700 leading-relaxed">
                   Ja, ik wil op de hoogte gehouden worden van aanbiedingen en nieuws via e-mail
@@ -478,15 +466,15 @@ const CustomerRegistration = () => {
                   required
                   checked={formData.acceptTerms}
                   onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-                  className={`mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-1 ${errors.acceptTerms ? 'border-red-500' : ''}`}
+                  className={`mt-1 w-4 h-4 text-black border-gray-300 rounded focus:ring-black focus:ring-1 ${errors.acceptTerms ? 'border-red-500' : ''}`}
                 />
                 <span className={`text-xs leading-relaxed ${errors.acceptTerms ? 'text-red-700' : 'text-gray-700'}`}>
                   Ik ben akkoord met de{' '}
-                  <span className="text-blue-600 underline hover:text-blue-700 cursor-pointer">
+                  <span className="text-black underline hover:text-gray-700 cursor-pointer">
                     algemene voorwaarden
                   </span>{' '}
                   en het{' '}
-                  <span className="text-blue-600 underline hover:text-blue-700 cursor-pointer">
+                  <span className="text-black underline hover:text-gray-700 cursor-pointer">
                     privacybeleid
                   </span>
                 </span>
@@ -506,7 +494,7 @@ const CustomerRegistration = () => {
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-6 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg shadow-lg transition-all duration-200"
+                className="w-full py-3 px-6 text-sm font-bold text-white bg-black hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-lg shadow-lg transition-all duration-200"
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 animate={isSubmitting ? { scale: 0.98 } : {}}
@@ -531,33 +519,17 @@ const CustomerRegistration = () => {
                     Verwerken...
                   </motion.span>
                 : 
-                  '✅ Registreer mij als klant'
+                  'Registreer mij als klant'
                 }
               </motion.button>
             </motion.div>
+
+            {/* Copyright */}
+            <div className="text-center mt-4">
+              <p className="text-xs text-gray-500">© Sisera, Powered by ArtoGraph</p>
+            </div>
           </form>
 
-          {/* Info Footer */}
-          <motion.div 
-            className="mt-8 p-4 bg-blue-50 rounded-lg text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1.0 }}
-          >
-            <p className="text-sm text-blue-700">
-              🛡️ Uw gegevens worden veilig opgeslagen en alleen gebruikt voor onze klantenservice
-            </p>
-          </motion.div>
-        </motion.div>
-
-        {/* Footer */}
-        <motion.div 
-          className="text-center mt-8 text-gray-500"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-        >
-          <p className="text-sm">© 2024 {storeDisplayName} - Klant Registratie Systeem</p>
         </motion.div>
       </motion.div>
     </motion.div>
