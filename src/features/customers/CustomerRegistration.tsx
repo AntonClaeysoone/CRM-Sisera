@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useShopStore } from '../../lib/stores/shopStore';
 import { useCustomerStore } from '../../lib/stores/customerStore';
 import { supabase } from '../../lib/supabase';
+import siseraLogo from '../../images/LOGO SISERA PNG.png';
+import bossLogo from '../../images/boss.png';
 
 const CustomerRegistration = () => {
   const navigate = useNavigate();
@@ -164,19 +166,19 @@ const CustomerRegistration = () => {
       >
         {/* Close Button */}
         <motion.div 
-          className="relative"
+          className="absolute top-0 right-0 z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <motion.button
             onClick={() => navigate('/dashboard')}
-            className="absolute -top-4 -right-4 z-10 p-3 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition-all duration-200 flex items-center justify-center"
-            whileHover={{ scale: 1.1 }}
+            className="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200 flex items-center justify-center"
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </motion.button>
         </motion.div>
@@ -217,7 +219,7 @@ const CustomerRegistration = () => {
               <motion.button
                 type="button"
                 onClick={() => setSelectedShop('sisera')}
-                className={`p-4 border-2 rounded-lg text-center transition-all duration-300 transform ${
+                className={`p-3 border-2 rounded-lg text-center transition-all duration-300 transform relative overflow-hidden ${
                   selectedShop === 'sisera'
                     ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-lg'
                     : 'border-gray-300 bg-white text-gray-700 hover:bg-blue-50 hover:border-blue-300'
@@ -228,19 +230,27 @@ const CustomerRegistration = () => {
                   scale: selectedShop === 'sisera' ? 1.01 : 1,
                 }}
               >
-                <motion.div 
-                  className="text-2xl mb-2"
-                  animate={selectedShop === 'sisera' ? { scale: [1, 1.1, 1] } : {}}
-                  transition={{ duration: 0.5 }}
-                >
-                  🏪
-                </motion.div>
-                <div className="text-lg font-bold">Sisera</div>
+                <div className="flex flex-col items-center">
+                  <img 
+                    src={siseraLogo}
+                    alt="Sisera"
+                    className="w-12 h-12 object-contain mb-2"
+                  />
+                  <div className="text-sm font-bold">Sisera</div>
+                </div>
+                {selectedShop === 'sisera' && (
+                  <motion.div
+                    className="absolute inset-0 border-2 border-blue-500 rounded-lg"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
               </motion.button>
               <motion.button
                 type="button"
                 onClick={() => setSelectedShop('boss')}
-                className={`p-4 border-2 rounded-lg text-center transition-all duration-300 transform ${
+                className={`p-3 border-2 rounded-lg text-center transition-all duration-300 transform relative overflow-hidden ${
                   selectedShop === 'boss'
                     ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-lg'
                     : 'border-gray-300 bg-white text-gray-700 hover:bg-blue-50 hover:border-blue-300'
@@ -251,14 +261,22 @@ const CustomerRegistration = () => {
                   scale: selectedShop === 'boss' ? 1.01 : 1,
                 }}
               >
-                <motion.div 
-                  className="text-2xl mb-2"
-                  animate={selectedShop === 'boss' ? { scale: [1, 1.1, 1] } : {}}
-                  transition={{ duration: 0.5 }}
-                >
-                  👔
-                </motion.div>
-                <div className="text-lg font-bold">Boss</div>
+                <div className="flex flex-col items-center">
+                  <img 
+                    src={bossLogo}
+                    alt="Boss"
+                    className="w-12 h-12 object-contain mb-2"
+                  />
+                  <div className="text-sm font-bold">Boss</div>
+                </div>
+                {selectedShop === 'boss' && (
+                  <motion.div
+                    className="absolute inset-0 border-2 border-blue-500 rounded-lg"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
               </motion.button>
             </div>
             <AnimatePresence>
