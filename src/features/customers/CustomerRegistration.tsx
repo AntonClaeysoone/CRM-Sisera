@@ -1,0 +1,491 @@
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useShopStore } from '../../lib/stores/shopStore';
+import { useCustomerStore } from '../../lib/stores/customerStore';
+import { supabase } from '../../lib/supabase';
+
+const CustomerRegistration = () => {
+  const { selectedShop, setSelectedShop } = useShopStore();
+  const { addCustomer } = useCustomerStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
+    birthDate: '',
+    store: selectedShop
+  });
+
+  // Update form data when shop changes
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, store: selectedShop }));
+  }, [selectedShop]);
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'Voornaam is verplicht';
+    }
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Achternaam is verplicht';
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = 'E-mail is verplicht';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'E-mail adres is ongeldig';
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Telefoonnummer is verplicht';
+    }
+    if (!formData.address.trim()) {
+      newErrors.address = 'Adres is verplicht';
+    }
+    if (!formData.birthDate) {
+      newErrors.birthDate = 'Geboortedatum is verplicht';
+    }
+    if (!formData.store) {
+      newErrors.store = 'Winkel selectie is verplicht';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .insert([
+          {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            address: formData.address,
+            birth_date: formData.birthDate,
+            store: formData.store
+          }
+        ])
+        .select();
+
+      if (error) {
+        throw error;
+      }
+
+      if (data && data[0]) {
+        const newCustomer = {
+          id: data[0].id,
+          firstName: data[0].first_name,
+          lastName: data[0].last_name,
+          email: data[0].email,
+          phone: data[0].phone,
+          address: data[0].address,
+          birthDate: data[0].birth_date,
+          store: data[0].store as 'sisera' | 'boss',
+          notes: data[0].notes || '',
+          createdAt: new Date(data[0].created_at),
+          updatedAt: new Date(data[0].updated_at)
+        };
+        
+        addCustomer(newCustomer);
+        
+        setSuccessMessage('Gelukt! Uw gegevens zijn succesvol geregistreerd.');
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          address: '',
+          birthDate: '',
+          store: selectedShop
+        });
+        setErrors({});
+        
+        // Reset success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 5000);
+      }
+    } catch (error) {
+      console.error('Error saving customer:', error);
+      setErrors({ general: 'Er is een fout opgetreden. Probeer het later opnieuw.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+    if (errors.general) {
+      setErrors(prev => ({ ...prev, general: '' }));
+    }
+  };
+
+  const storeDisplayName = selectedShop === 'sisera' ? 'Sisera' : 'Boss';
+
+  return (
+    <motion.div 
+      className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.div 
+        className="w-full max-w-2xl"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        {/* Header */}
+        <motion.div 
+          className="text-center mb-8"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <motion.div 
+            className="text-6xl mb-4"
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            🏪
+          </motion.div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Welkom bij {storeDisplayName}
+          </h1>
+          <p className="text-lg text-gray-600">
+            Registreer u als klant en profiteer van onze service
+          </p>
+        </motion.div>
+
+        {/* Main Form Card */}
+        <motion.div 
+          className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          {/* Store Selection */}
+          <motion.div 
+            className="mb-8"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <label className="block text-xl font-semibold text-gray-800 mb-6 text-center">
+              Selecteer uw winkel *
+            </label>
+            <div className="grid grid-cols-2 gap-4">
+              <motion.button
+                type="button"
+                onClick={() => setSelectedShop('sisera')}
+                className={`p-6 border-3 rounded-xl text-center transition-all duration-300 transform ${
+                  selectedShop === 'sisera'
+                    ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-lg'
+                    : 'border-gray-300 bg-white text-gray-700 hover:bg-blue-50 hover:border-blue-300'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={{
+                  scale: selectedShop === 'sisera' ? 1.02 : 1,
+                }}
+              >
+                <motion.div 
+                  className="text-4xl mb-3"
+                  animate={selectedShop === 'sisera' ? { scale: [1, 1.1, 1] } : {}}
+                  transition={{ duration: 0.5 }}
+                >
+                  🏪
+                </motion.div>
+                <div className="text-xl font-bold">Sisera</div>
+                <div className="text-sm text-gray-500 mt-1">Mode & Lifestyle</div>
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={() => setSelectedShop('boss')}
+                className={`p-6 border-3 rounded-xl text-center transition-all duration-300 transform ${
+                  selectedShop === 'boss'
+                    ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-lg'
+                    : 'border-gray-300 bg-white text-gray-700 hover:bg-blue-50 hover:border-blue-300'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={{
+                  scale: selectedShop === 'boss' ? 1.02 : 1,
+                }}
+              >
+                <motion.div 
+                  className="text-4xl mb-3"
+                  animate={selectedShop === 'boss' ? { scale: [1, 1.1, 1] } : {}}
+                  transition={{ duration: 0.5 }}
+                >
+                  👔
+                </motion.div>
+                <div className="text-xl font-bold">Boss</div>
+                <div className="text-sm text-gray-500 mt-1">Business & Style</div>
+              </motion.button>
+            </div>
+            <AnimatePresence>
+              {errors.store && (
+                <motion.p 
+                  className="mt-3 text-sm text-red-600 text-center"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                >
+                  {errors.store}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Success Message */}
+          <AnimatePresence>
+            {successMessage && (
+              <motion.div 
+                className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-center"
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-green-600 text-lg">✅ {successMessage}</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Error Message */}
+          <AnimatePresence>
+            {errors.general && (
+              <motion.div 
+                className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-center"
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-red-600 text-lg">❌ {errors.general}</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Registration Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Name Fields */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-lg font-semibold text-gray-700 mb-2">
+                  Voornaam *
+                </label>
+                <input
+                  type="text"
+                  required
+                  className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                    errors.firstName 
+                      ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                  } focus:outline-none focus:ring-4`}
+                  value={formData.firstName}
+                  onChange={(e) => handleInputChange('firstName', e.target.value)}
+                  placeholder="Uw voornaam"
+                />
+                {errors.firstName && (
+                  <p className="mt-2 text-sm text-red-600">{errors.firstName}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-lg font-semibold text-gray-700 mb-2">
+                  Achternaam *
+                </label>
+                <input
+                  type="text"
+                  required
+                  className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                    errors.lastName 
+                      ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                  } focus:outline-none focus:ring-4`}
+                  value={formData.lastName}
+                  onChange={(e) => handleInputChange('lastName', e.target.value)}
+                  placeholder="Uw achternaam"
+                />
+                {errors.lastName && (
+                  <p className="mt-2 text-sm text-red-600">{errors.lastName}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Contact Information */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-lg font-semibold text-gray-700 mb-2">
+                  E-mail *
+                </label>
+                <input
+                  type="email"
+                  required
+                  className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                    errors.email 
+                      ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                  } focus:outline-none focus:ring-4`}
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="uw.email@voorbeeld.com"
+                />
+                {errors.email && (
+                  <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-lg font-semibold text-gray-700 mb-2">
+                  Telefoon *
+                </label>
+                <input
+                  type="tel"
+                  required
+                  className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                    errors.phone 
+                      ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                  } focus:outline-none focus:ring-4`}
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  placeholder="+32 123 456 789"
+                />
+                {errors.phone && (
+                  <p className="mt-2 text-sm text-red-600">{errors.phone}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Address */}
+            <div>
+              <label className="block text-lg font-semibold text-gray-700 mb-2">
+                Adres *
+              </label>
+              <textarea
+                rows={3}
+                required
+                className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 resize-none ${
+                  errors.address 
+                    ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
+                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                } focus:outline-none focus:ring-4`}
+                value={formData.address}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+                placeholder="Straat, huisnummer, postcode en plaats"
+              />
+              {errors.address && (
+                <p className="mt-2 text-sm text-red-600">{errors.address}</p>
+              )}
+            </div>
+
+            {/* Birth Date */}
+            <div>
+              <label className="block text-lg font-semibold text-gray-700 mb-2">
+                Geboortedatum *
+              </label>
+              <input
+                type="date"
+                required
+                className={`w-full px-4 py-4 text-lg border-2 rounded-lg transition-colors duration-200 ${
+                  errors.birthDate 
+                    ? 'border-red-400 focus:border-red-500 focus:ring-red-200' 
+                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
+                } focus:outline-none focus:ring-4`}
+                value={formData.birthDate}
+                onChange={(e) => handleInputChange('birthDate', e.target.value)}
+                max={new Date().toISOString().split('T')[0]}
+              />
+              {errors.birthDate && (
+                <p className="mt-2 text-sm text-red-600">{errors.birthDate}</p>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <motion.div 
+              className="pt-6"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <motion.button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-5 px-8 text-xl font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed rounded-lg shadow-lg transition-all duration-200"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                animate={isSubmitting ? { scale: 0.98 } : {}}
+              >
+                {isSubmitting ? 
+                  <motion.span 
+                    className="flex items-center justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    <motion.svg 
+                      className="h-6 w-6 text-white mr-3" 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      fill="none" 
+                      viewBox="0 0 24 24"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    >
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </motion.svg>
+                    Verwerken...
+                  </motion.span>
+                : 
+                  '✅ Registreer mij als klant'
+                }
+              </motion.button>
+            </motion.div>
+          </form>
+
+          {/* Info Footer */}
+          <motion.div 
+            className="mt-8 p-4 bg-blue-50 rounded-lg text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.0 }}
+          >
+            <p className="text-sm text-blue-700">
+              🛡️ Uw gegevens worden veilig opgeslagen en alleen gebruikt voor onze klantenservice
+            </p>
+          </motion.div>
+        </motion.div>
+
+        {/* Footer */}
+        <motion.div 
+          className="text-center mt-8 text-gray-500"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
+        >
+          <p className="text-sm">© 2024 {storeDisplayName} - Klant Registratie Systeem</p>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+export default CustomerRegistration;

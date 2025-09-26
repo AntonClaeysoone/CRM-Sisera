@@ -4,6 +4,7 @@ import LoginPage from './features/auth/LoginPage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import Dashboard from './features/dashboard/Dashboard';
 import CustomerManagement from './features/customers/CustomerManagement';
+import CustomerRegistration from './features/customers/CustomerRegistration';
 import './App.css';
 
 function App() {
@@ -18,6 +19,10 @@ function App() {
             element={
               isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />
             } 
+          />
+          <Route 
+            path="/register" 
+            element={<CustomerRegistration />} 
           />
           <Route 
             path="/" 
