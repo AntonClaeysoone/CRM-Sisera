@@ -11,7 +11,7 @@ interface CustomerOnboardingModalProps {
 
 const CustomerOnboardingModal = ({ isOpen, onClose, onSuccess }: CustomerOnboardingModalProps) => {
   const { selectedShop } = useShopStore();
-  const { addCustomer, refreshCustomers } = useCustomerStore();
+  const { addCustomer } = useCustomerStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
