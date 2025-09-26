@@ -20,7 +20,9 @@ const CustomerRegistration = () => {
     phone: '',
     address: '',
     birthDate: '',
-    store: selectedShop
+    store: selectedShop,
+    acceptMarketing: false,
+    acceptTerms: false
   });
 
   // Update form data when shop changes
@@ -53,6 +55,9 @@ const CustomerRegistration = () => {
     }
     if (!formData.store) {
       newErrors.store = 'Winkel selectie is verplicht';
+    }
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = 'U moet akkoord gaan met de algemene voorwaarden';
     }
 
     setErrors(newErrors);
@@ -113,7 +118,9 @@ const CustomerRegistration = () => {
           phone: '',
           address: '',
           birthDate: '',
-          store: selectedShop
+          store: selectedShop,
+          acceptMarketing: false,
+          acceptTerms: false
         });
         setErrors({});
         
@@ -130,7 +137,7 @@ const CustomerRegistration = () => {
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -181,18 +188,11 @@ const CustomerRegistration = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <motion.div 
-            className="text-6xl mb-4"
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            🏪
-          </motion.div>
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Welkom bij {storeDisplayName}
+            Registreer als klant
           </h1>
           <p className="text-lg text-gray-600">
-            Registreer u als klant en profiteer van onze service
+            Word lid en profiteer van voordelen
           </p>
         </motion.div>
 
@@ -213,54 +213,52 @@ const CustomerRegistration = () => {
             <label className="block text-xl font-semibold text-gray-800 mb-6 text-center">
               Selecteer uw winkel *
             </label>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <motion.button
                 type="button"
                 onClick={() => setSelectedShop('sisera')}
-                className={`p-6 border-3 rounded-xl text-center transition-all duration-300 transform ${
+                className={`p-4 border-2 rounded-lg text-center transition-all duration-300 transform ${
                   selectedShop === 'sisera'
                     ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-lg'
                     : 'border-gray-300 bg-white text-gray-700 hover:bg-blue-50 hover:border-blue-300'
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 animate={{
-                  scale: selectedShop === 'sisera' ? 1.02 : 1,
+                  scale: selectedShop === 'sisera' ? 1.01 : 1,
                 }}
               >
                 <motion.div 
-                  className="text-4xl mb-3"
+                  className="text-2xl mb-2"
                   animate={selectedShop === 'sisera' ? { scale: [1, 1.1, 1] } : {}}
                   transition={{ duration: 0.5 }}
                 >
                   🏪
                 </motion.div>
-                <div className="text-xl font-bold">Sisera</div>
-                <div className="text-sm text-gray-500 mt-1">Mode & Lifestyle</div>
+                <div className="text-lg font-bold">Sisera</div>
               </motion.button>
               <motion.button
                 type="button"
                 onClick={() => setSelectedShop('boss')}
-                className={`p-6 border-3 rounded-xl text-center transition-all duration-300 transform ${
+                className={`p-4 border-2 rounded-lg text-center transition-all duration-300 transform ${
                   selectedShop === 'boss'
                     ? 'border-blue-500 bg-blue-50 text-blue-900 shadow-lg'
                     : 'border-gray-300 bg-white text-gray-700 hover:bg-blue-50 hover:border-blue-300'
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 animate={{
-                  scale: selectedShop === 'boss' ? 1.02 : 1,
+                  scale: selectedShop === 'boss' ? 1.01 : 1,
                 }}
               >
                 <motion.div 
-                  className="text-4xl mb-3"
+                  className="text-2xl mb-2"
                   animate={selectedShop === 'boss' ? { scale: [1, 1.1, 1] } : {}}
                   transition={{ duration: 0.5 }}
                 >
                   👔
                 </motion.div>
-                <div className="text-xl font-bold">Boss</div>
-                <div className="text-sm text-gray-500 mt-1">Business & Style</div>
+                <div className="text-lg font-bold">Boss</div>
               </motion.button>
             </div>
             <AnimatePresence>
@@ -438,6 +436,47 @@ const CustomerRegistration = () => {
               />
               {errors.birthDate && (
                 <p className="mt-2 text-sm text-red-600">{errors.birthDate}</p>
+              )}
+            </div>
+
+            {/* Marketing Opt-in */}
+            <div className="pt-4">
+              <label className="flex items-start space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.acceptMarketing}
+                  onChange={(e) => handleInputChange('acceptMarketing', e.target.checked)}
+                  className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="text-sm text-gray-700 leading-relaxed">
+                  Ja, ik wil op de hoogte gehouden worden van aanbiedingen en nieuws via e-mail
+                </span>
+              </label>
+            </div>
+
+            {/* Terms & Conditions */}
+            <div className="pt-2">
+              <label className="flex items-start space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  required
+                  checked={formData.acceptTerms}
+                  onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
+                  className={`mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 ${errors.acceptTerms ? 'border-red-500' : ''}`}
+                />
+                <span className={`text-sm leading-relaxed ${errors.acceptTerms ? 'text-red-700' : 'text-gray-700'}`}>
+                  Ik ben akkoord met de{' '}
+                  <span className="text-blue-600 underline hover:text-blue-700 cursor-pointer">
+                    algemene voorwaarden
+                  </span>{' '}
+                  en het{' '}
+                  <span className="text-blue-600 underline hover:text-blue-700 cursor-pointer">
+                    privacybeleid
+                  </span>
+                </span>
+              </label>
+              {errors.acceptTerms && (
+                <p className="mt-1 text-sm text-red-600">{errors.acceptTerms}</p>
               )}
             </div>
 
